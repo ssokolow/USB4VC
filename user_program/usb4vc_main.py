@@ -7,8 +7,6 @@ import usb4vc_usb_scan
 import usb4vc_ui
 import subprocess 
 
-# usb4vc_ui.reset_pboard()
-
 def get_current_rpi_model():
     current_model = 'Unknown'
     try:
@@ -62,7 +60,7 @@ try:
     boot_config = os.popen('cat /boot/cmdline.txt').read()
     if "usbhid.mousepoll".lower() not in boot_config.lower():
         print("@@@@@@@@@@@@ writing usbhid.mousepoll to /boot/cmdline.txt @@@@@@@@@@@@")
-        new_config = boot_config.replace('\r', '').replace('\n', '').strip() + ' usbhid.mousepoll=0\n'
+        new_config = boot_config.replace('\r', '').replace('\n', '').strip() + ' usbhid.mousepoll=8\n'
         with open('/boot/cmdline.txt', 'w') as ffff:
             ffff.write(new_config)
 except Exception as e:
@@ -76,13 +74,12 @@ usb4vc_usb_scan.raw_input_event_parser_thread.start()
 
 while 1:
     time.sleep(2)
-    if os.path.exists("/sys/module/bluetooth/parameters/disable_ertm"):
-        try:
-            ertm_status = subprocess.getoutput("cat /sys/module/bluetooth/parameters/disable_ertm").replace('\n', '').replace('\r', '').strip()
-            if ertm_status != 'Y':
-                print('ertm_status:', ertm_status)
-                print("Disabling ERTM....")
-                subprocess.call('echo 1 > /sys/module/bluetooth/parameters/disable_ertm')
-                print("DONE")
-        except Exception:
-            continue
+    try:
+        ertm_status = subprocess.getoutput("cat /sys/module/bluetooth/parameters/disable_ertm").replace('\n', '').replace('\r', '').strip()
+        if ertm_status != 'Y':
+            print('ertm_status:', ertm_status)
+            print("Disabling ERTM....")
+            subprocess.call('echo 1 > /sys/module/bluetooth/parameters/disable_ertm')
+            print("DONE")
+    except Exception:
+        continue

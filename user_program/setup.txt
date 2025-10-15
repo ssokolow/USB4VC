@@ -17,25 +17,53 @@ set up ssh:
 ssh-keygen
 copy PC pub key to rpi ~/.ssh/authorized_keys
 
+------------
+
+IMPORTANT !!!!!!!!!!!!!!!!!!
+
+sudo apt update
+sudo apt upgrade
+
 -------------
 # use sudo -E to preserve environmental variables for python3
+sudo apt-get update
 
 sudo apt-get install i2c-tools
 sudo apt install stm32flash
 
-/usr/local/bin/stm32flash -r hhh -a 0x3b /dev/i2c-1
 stm32flash -r PBFW_IBMPC_PBID1_V0_2_0.dfu -a 0x3b /dev/i2c-1
 
 sudo apt install dfu-util
 sudo dfu-util --device ,0483:df11 -a 0 -D ~/usb4vc/firmware/PBFW_ADB_PBID2_V0_1_1.dfu
 
+-----
+sudo apt install evtest
+pip3 install evdev
+
+
+sudo apt install python3-pip
+
+raspberry pi 5 uses a different GPIO chip, this is a compatibility package
+
+// no need
+sudo apt remove python3-rpi.gpio
+// no need?
+sudo pip3 install --break-system-packages rpi-lgpio
+
+cd ~;git clone https://github.com/atar-axis/xpadneo.git
+sudo apt-get install dkms raspberrypi-kernel-headers 
+
+https://github.com/atar-axis/xpadneo
 --------------
+
+sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old
+-----
 
 Luma OLED driver
 
 https://luma-oled.readthedocs.io/en/latest/software.html
 sudo apt-get update
-sudo apt-get install python3 python3-pip python3-pil libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjp2-7 libtiff5 -y
+sudo apt-get install python3 python3-pip python3-pil libjpeg-dev zlib1g-dev libfreetype6-dev liblcms2-dev libopenjp2-7 -y
 sudo -H pip3 install luma.oled
 
 -------------------
@@ -54,7 +82,6 @@ https://raspberrypi-guide.github.io/programming/run-script-on-boot
 
 sudo su
 
-pip3 install evdev
 
 sudo nano /etc/rc.local
 
@@ -73,11 +100,11 @@ echo 'options bluetooth disable_ertm=Y' | sudo tee -a /etc/modprobe.d/bluetooth.
 ------------
 boot speedup:
 
-sudo nano /boot/config.txt
+sudo nano /boot/firmware/config.txt
 disable_splash=1
 boot_delay=0
 
-sudo nano /boot/cmdline.txt
+sudo nano /boot/firmware/cmdline.txt
 
 Add quiet after rootwait
 
@@ -116,7 +143,28 @@ usb4vc_data
 		config and mapping files
 
 
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx NO LONGER NEEDED xxxxxxxxxxxxxxxxxxxxxxxx
+--------------
+
+Raspberry Pi 5 Controller test:
+
+WIRED
+
+Xbox 360 wired: cant find the controller
+Xbox One: OK
+Xbox Series X: OK
+PS4: ok
+PS5: ok
+Swich Pro: OK
+
+BLUETOOTH
+
+Xbox One: NO
+Xbox Series X: NO
+PS4: OK
+PS5: 
+Swich Pro: 
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx NO LONGER NEEDED xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 raspberry pi 3
 before speedup:
